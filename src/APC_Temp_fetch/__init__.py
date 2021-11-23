@@ -1,19 +1,11 @@
-class OutputConfig:
-    def __init__(self, verbose, host):
-        self._verbose = verbose
-        self._host = host
+from .old import Old
+from .frmnc import Frmnc
+from .cs141 import Cs141
 
-    def eprint(self, *args, **kwargs):
-        if self._verbose:
-            print(*args, file=sys.stderr, **kwargs)
+__all__ = ['KINDS']
 
-    def urlway(self, num, in_url, handler):
-        self.eprint(F'{self._host}: [{num}]', in_url, end=' -> ')
-        try:
-            r = handler(in_url)
-            self.eprint(r.url)
-            return r
-        except Exception as e:
-            # we want to terminate the line cleanly
-            self.eprint('ERROR:', e)
-            raise
+KINDS = {
+    'old': Old,
+    'frmnc': Frmnc,
+    'cs141': Cs141,
+}

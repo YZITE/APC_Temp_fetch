@@ -4,7 +4,7 @@
 import argparse
 import signal
 import time
-from . import old as atf_old, frmnc as atf_frmnc, cs141 as atf_cs141
+from . import KINDS
 
 # { source: https://code-maven.com/python-timeout
 class TimeOutException(Exception):
@@ -16,27 +16,22 @@ def alarm_handler(signum, frame):
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-FETCHERS = {
-    'old': atf_old.extract,
-    'frmnc': atf_frmnc.extract,
-    'cs141': atf_cs141.extract,
-}
 class UnknownFetcher(Exception):
     pass
 def run_one_handle_kind(verbose, kind, host, user, password):
     x = None
     try:
-        x = FETCHERS[kind]
+        x = KINDS[kind]
     except KeyError:
         raise UnknownFetcher('unknown fetcher: ' + kind)
-    val = x(verbose, host, user, password)
+    val = x.extract(x(verbose, host).fetch(user, password))
     if val:
         print(f"{host}\t{val}")
 
 def main_one():
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
-    parser.add_argument("kind", help="APC interface kind (one of: old ng cs141)")
+    parser.add_argument("kind", help="APC interface kind (one of: old frmnc cs141)")
     parser.add_argument("host", help="connect to the host (APC) via HTTP")
     parser.add_argument("user", help="with the given user")
     parser.add_argument("password", help="with the given pass")

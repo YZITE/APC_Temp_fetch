@@ -1,10 +1,10 @@
 import requests
-from . import OutputConfig
+from .base import ApcKind
 
-def extract_all(verbose, host, user, password):
-    r = OutputConfig(verbose, host).urlway(0, 'http://' + host + '/upsstat.htm',
-        lambda xurl: requests.get(xurl, auth = (user, password)))
-    return r.text
+class Old(ApcKind):
+    def fetch(self, user, password):
+        return self.urlway(0, 'http://' + self.host + '/upsstat.htm',
+            lambda xurl: requests.get(xurl, auth = (user, password))).text
 
-def extract(verbose, host, user, password):
-    return filter(lambda line: "Internal Temperature" in line, extract_all(verbose, host, user, password).splitlines())[-1]
+    @staticmethod
+    def extract(rtxt): return filter(lambda line: "Internal Temperature" in line, rtxt.splitlines())[-1]

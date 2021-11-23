@@ -1,24 +1,24 @@
 import requests
-from . import OutputConfig
+from .base import ApcKind
 
-def extract_all(verbose, host, user, password):
-    o = OutputConfig(verbose, host)
-    s = requests.Session()
-    r = o.urlway(0, 'http://' + host + '/api/login', lambda xurl: s.post(xurl, data = {
-        'userName': user,
-        'password': password,
-        'anonymous': '',
-        'newPassword': '',
-    }))
+class Cs141(ApcKind):
+    def fetch(self, user, password):
+        s = requests.Session()
+        r = self.urlway(0, 'http://' + host + '/api/login', lambda xurl: s.post(xurl, data = {
+            'userName': user,
+            'password': password,
+            'anonymous': '',
+            'newPassword': '',
+        }))
 
-    try:
-        r = o.urlway(1, 'http://' + host + '/api/devices/ups/report', lambda xurl: s.get(xurl))
-    finally:
-        o.urlway(2, 'http://' + host + '/api/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
+        try:
+            r = self.urlway(1, 'http://' + host + '/api/devices/ups/report', lambda xurl: s.get(xurl))
+        finally:
+            self.urlway(2, 'http://' + host + '/api/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
 
-    upsst = r.json()['ups']['valtable']
-    o.eprint(F'{host}: [result]:', repr(upsst))
-    return upsst
+        upsst = r.json()['ups']['valtable']
+        self.eprint(F'{host}: [result]:', repr(upsst))
+        return upsst
 
-def extract(verbose, host, user, password):
-    return extract_all(verbose, host, user, password)['TEMPDEG']
+    @staticmethod
+    def extract(upsst): return upsst['TEMPDEG']
