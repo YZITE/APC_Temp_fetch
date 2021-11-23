@@ -42,20 +42,24 @@ class UpsParserStateMachine:
 class Frmnc(ApcKind):
     def fetch(self, user, password):
         base_url = "http://" + self.host
-        r = o.urlway(0, base_url, requests.get)
-        forml = [value for value in r.text.splitlines() if "name=\"frmLogin\"" in value][0]
+        r = o.urlway(0, base_url, lambda xurl: requests.get(xurl, stream=True))
+        if r.encoding is None:
+            r.encoding = 'utf-8'
+        forml = [value for value in r.iter_lines(decode_unicode=True) if "name=\"frmLogin\"" in value][0]
         next_url = urljoin(base_url,
             [value for value in forml.split() if "action=" in value][0].split('=', 2)[1].split('"', 3)[1])
         del forml
 
-        r = o.urlway(1, next_url, lambda xurl: requests.post(next_url, data = {
+        r = o.urlway(1, next_url, lambda xurl: requests.post(next_url, stream=True, data = {
             'login_username': args.user,
             'login_password': args.password,
         }))
+        if r.encoding is None:
+            r.encoding = 'utf-8'
 
         try:
             statemach = UpsParserStateMachine()
-            for line in r.text.splitlines():
+            for line in r.iter_lines(decode_unicode=True):
                 (statemach.state)(line)
             upsst = statemach.upsst
             del statemach
