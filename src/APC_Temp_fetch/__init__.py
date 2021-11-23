@@ -1,20 +1,19 @@
-def eprint(*args, **kwargs):
-    if 'verbose' in kwargs:
-        if not kwargs['verbose']:
-            return
-        del kwargs['verbose']
-    print(*args, file=sys.stderr, **kwargs)
+class OutputConfig:
+    def __init__(self, verbose, host):
+        self._verbose = verbose
+        self._host = host
 
-def my_urlway(verbose, host, num, in_url, handler):
-    if verbose:
-        print(F'{host}: [{num}]', in_url, end=' -> ', file=sys.stderr)
-    try:
-        r = handler(in_url)
-        if verbose:
-            print(r.url)
-        return r
-    except Exception as e:
-        if verbose:
+    def eprint(self, *args, **kwargs):
+        if self._verbose:
+            print(*args, file=sys.stderr, **kwargs)
+
+    def urlway(self, num, in_url, handler):
+        self.eprint(F'{self._host}: [{num}]', in_url, end=' -> ')
+        try:
+            r = handler(in_url)
+            self.eprint(r.url)
+            return r
+        except Exception as e:
             # we want to terminate the line cleanly
-            print('ERROR:', e)
-        raise
+            self.eprint('ERROR:', e)
+            raise

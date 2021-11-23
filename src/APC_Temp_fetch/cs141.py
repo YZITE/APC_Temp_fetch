@@ -1,28 +1,24 @@
 import requests
-from . import eprint
+from . import OutputConfig
 
-def extract(verbose, host, user, password):
-    xurl = 'http://' + host + '/api/login'
-    eprint('[0]', xurl, end=' -> ', verbose=verbose)
+def extract_all(verbose, host, user, password):
+    o = OutputConfig(verbose, host)
     s = requests.Session()
-    r = s.post(xurl, data = {
+    r = o.urlway(0, 'http://' + host + '/api/login', lambda xurl: s.post(xurl, data = {
         'userName': user,
         'password': password,
         'anonymous': '',
         'newPassword': '',
-    })
-    eprint(r.url, verbose=verbose)
-
-    xurl = 'http://' + host + '/api/devices/ups/report'
-    eprint('[1]', xurl, verbose=verbose)
+    }))
 
     try:
-        r = s.get(xurl)
-        upsst = r.json()['ups']['valtable']
+        r = o.urlway(1, 'http://' + host + '/api/devices/ups/report', lambda xurl: s.get(xurl))
     finally:
-        xurl = 'http://' + host + '/api/logout'
-        eprint('[2]', xurl, verbose=verbose)
-        r = s.post(xurl, data = { 'userName': user })
+        o.urlway(2, 'http://' + host + '/api/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
 
-    eprint('[result]: ' + repr(upsst), verbose=verbose)
-    return upsst['TEMPDEG']
+    upsst = r.json()['ups']['valtable']
+    o.eprint(F'{host}: [result]:', repr(upsst))
+    return upsst
+
+def extract(verbose, host, user, password):
+    return extract_all(verbose, host, user, password)['TEMPDEG']

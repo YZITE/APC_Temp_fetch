@@ -4,27 +4,31 @@
 import argparse
 import signal
 import time
-from . import eprint, old as atf_old, frmnc as atf_frmnc, cs141 as atf_cs141
+from . import old as atf_old, frmnc as atf_frmnc, cs141 as atf_cs141
 
-# source: https://code-maven.com/python-timeout
+# { source: https://code-maven.com/python-timeout
 class TimeOutException(Exception):
     pass
-
 def alarm_handler(signum, frame):
     raise TimeOutException('timeout reached')
+# }
 
-EXTRACTORS = {
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+FETCHERS = {
     'old': atf_old.extract,
     'frmnc': atf_frmnc.extract,
     'cs141': atf_cs141.extract,
 }
-
+class UnknownFetcher(Exception):
+    pass
 def run_one_handle_kind(verbose, kind, host, user, password):
     x = None
     try:
-        x = EXTRACTORS[kind]
+        x = FETCHERS[kind]
     except KeyError:
-        return
+        raise UnknownFetcher('unknown fetcher: ' + kind)
     val = x(verbose, host, user, password)
     if val:
         print(f"{host}\t{val}")
@@ -45,9 +49,9 @@ def main_one():
         if args.timeout:
             signal.alarm(args.timeout)
         run_one_handle_kind(args.verbose, args.kind, args.host, args.user, args.password)
-        signal.alarm(0)
     except Exception as e:
         eprint(F"{args.host}: ERROR: {e}")
+    signal.alarm(0)
 
 def main_list():
     parser = argparse.ArgumentParser()
@@ -71,6 +75,6 @@ def main_list():
                     if len(parts) > 4:
                         signal.alarm(int(parts[4]))
                     run_one_handle_kind(verbose, kind, host, user, password)
-                    signal.alarm(0)
                 except Exception as e:
                     eprint(F'{host}: ERROR: {e}')
+                signal.alarm(0)
