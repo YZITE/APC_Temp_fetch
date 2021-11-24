@@ -3,7 +3,7 @@ from .base import ApcKind
 
 class Old(ApcKind):
     def fetch(self, user: str, password: str):
-        return self.urlway(0, 'http://' + self.host + '/upsstat.htm',
+        return self.urlway(0, 'http://' + self._host + '/upsstat.htm',
             lambda xurl: requests.get(xurl, auth = (user, password))).text
 
     @staticmethod

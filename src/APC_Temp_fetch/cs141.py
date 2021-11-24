@@ -3,10 +3,11 @@ from .base import ApcKind
 
 class Cs141(ApcKind):
     def fetch(self, user: str, password: str):
+        base_url = F'http://{self._host}/api'
         upsst = None
 
         with requests.Session() as s:
-            r = self.urlway(0, 'http://' + host + '/api/login', lambda xurl: s.post(xurl, data = {
+            r = self.urlway(0, base_url + '/login', lambda xurl: s.post(xurl, data = {
                 'userName': user,
                 'password': password,
                 'anonymous': '',
@@ -14,14 +15,14 @@ class Cs141(ApcKind):
             }))
 
             try:
-                r = self.urlway(1, 'http://' + host + '/api/devices/ups/report', lambda xurl: s.get(xurl))
+                r = self.urlway(1, base_url + '/devices/ups/report', lambda xurl: s.get(xurl))
             finally:
-                self.urlway(2, 'http://' + host + '/api/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
+                self.urlway(2, base_url + '/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
 
             upsst = r.json()['ups']['valtable']
             del r
 
-        self.eprint(F'{host}: [result]:', repr(upsst))
+        self.eprint(F'{self._host}: [result]:', repr(upsst))
         return upsst
 
     @staticmethod

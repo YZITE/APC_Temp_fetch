@@ -41,7 +41,7 @@ class UpsParserStateMachine:
 
 class Frmnc(ApcKind):
     def fetch(self, user: str, password: str):
-        base_url = "http://" + self.host
+        base_url = "http://" + self._host
         r = o.urlway(0, base_url, lambda xurl: requests.get(xurl, stream=True))
         if r.encoding is None:
             r.encoding = 'utf-8'
@@ -51,8 +51,8 @@ class Frmnc(ApcKind):
         del forml
 
         r = o.urlway(1, next_url, lambda xurl: requests.post(next_url, stream=True, data = {
-            'login_username': args.user,
-            'login_password': args.password,
+            'login_username': user,
+            'login_password': password,
         }))
         if r.encoding is None:
             r.encoding = 'utf-8'
@@ -66,7 +66,7 @@ class Frmnc(ApcKind):
         finally:
             o.urlway(2, urljoin(r.url, "logout.htm"), requests.get)
 
-        o.eprint(F'{self.host}: [result]:', repr(upsst))
+        o.eprint(F'{self._host}: [result]:', repr(upsst))
         return upssst
 
     @staticmethod
