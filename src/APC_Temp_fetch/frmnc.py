@@ -44,15 +44,14 @@ class Frmnc(ApcKind):
         base_url = "http://" + self._host
         s = requests.Session()
         r = self.urlway(0, True, base_url, lambda xurl: s.get(xurl, stream=True))
-        forml = [value for value in r.iter_lines(decode_unicode=True) if "name=\"frmLogin\"" in value][0]
-        next_url = urljoin(base_url,
-            [value for value in forml.split() if "action=" in value][0].split('=', 2)[1].split('"', 3)[1])
-        del forml
+        forml = next(filter(lambda value: "name=\"frmLogin\"" in value, r.iter_lines(decode_unicode=True)))
+        forml = next(filter(lambda value: "action=" in value, forml.split())).split('=', 2)[1].split('"', 3)[1]
 
-        r = self.urlway(1, True, next_url, lambda xurl: s.post(next_url, stream=True, data = {
+        r = self.urlway(1, True, urljoin(base_url, forml), lambda xurl: s.post(xurl, stream=True, data = {
             'login_username': user,
             'login_password': password,
         }))
+        del forml
 
         try:
             statemach = UpsParserStateMachine()
@@ -61,7 +60,7 @@ class Frmnc(ApcKind):
             upsst = statemach.upsst
             del statemach
         finally:
-            self.urlway(2, False, urljoin(r.url, "logout.htm"), s.get)
+            self.urlway(2, False, urljoin(r.url, "logout.htm"), s.head)
             del r, s
 
         self.eprint(F'{self._host}: [result]:', repr(upsst))
