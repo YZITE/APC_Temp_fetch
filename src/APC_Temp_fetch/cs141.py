@@ -15,7 +15,7 @@ class Cs141(ApcKind):
             }))
 
             try:
-                r = self.urlway(1, False, base_url + '/devices/ups/report', lambda xurl: s.get(xurl))
+                r = self.urlway(1, False, base_url + '/devices/ups/report', s.get)
             finally:
                 self.urlway(2, False, base_url + '/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
 
