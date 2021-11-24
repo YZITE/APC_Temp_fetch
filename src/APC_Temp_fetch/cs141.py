@@ -8,17 +8,17 @@ class Cs141(ApcKind):
 
         with requests.Session() as s:
             s.auth = NullAuth()
-            r = self.urlway(0, False, base_url + '/login', lambda xurl: s.post(xurl, data = {
+            r = self.urlway(0, base_url + '/login', s.post, data = {
                 'userName': user,
                 'password': password,
                 'anonymous': '',
                 'newPassword': '',
-            }))
+            })
 
             try:
-                r = self.urlway(1, False, base_url + '/devices/ups/report', s.get)
+                r = self.urlway(1, base_url + '/devices/ups/report', s.get)
             finally:
-                self.urlway(2, False, base_url + '/logout', lambda xurl: s.post(xurl, data = { 'userName': user }))
+                self.urlway(2, base_url + '/logout', s.post, data = { 'userName': user })
 
             upsst = r.json()['ups']['valtable']
             del r

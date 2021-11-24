@@ -13,12 +13,12 @@ class ApcKind:
         if self._verbose:
             print(*args, file=sys.stderr, **kwargs)
 
-    def urlway(self, num: int, fix_encoding: bool, in_url, handler):
+    def urlway(self, num: int, in_url: str, handler, **kwargs):
         self.eprint(F'{self._host}: [{num}]', in_url, end=' -> ')
         try:
-            r = handler(in_url)
+            r = handler(in_url, **kwargs)
             self.eprint(r.url)
-            if fix_encoding and (r.encoding is None):
+            if 'stream' in kwargs and bool(kwargs['stream']) and r.encoding is None:
                 r.encoding = 'utf-8'
             return r
         except Exception as e:
