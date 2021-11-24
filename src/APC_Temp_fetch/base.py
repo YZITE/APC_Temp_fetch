@@ -1,12 +1,14 @@
+import sys
+
 class ApcKind:
     def __init__(self, verbose: bool, host: str, **kwargs):
-        # forwards all unused arguments
-        super().__init__(**kwargs)
+        # forwards all unused arguments, to make this class usable as a mixin
+        super().__init__(**kwargs) # type: ignore[call-arg]
 
         self._verbose = verbose
         self._host = host
 
-    def eprint(self, *args, **kwargs):
+    def eprint(self, *args, **kwargs) -> None:
         if self._verbose:
             print(*args, file=sys.stderr, **kwargs)
 

@@ -3,6 +3,7 @@
 
 import argparse
 import signal
+import sys
 import time
 from . import KINDS
 
@@ -13,12 +14,12 @@ def alarm_handler(signum, frame):
     raise TimeOutException('timeout reached')
 # }
 
-def eprint(*args, **kwargs):
+def eprint(*args, **kwargs) -> None:
     print(*args, file=sys.stderr, **kwargs)
 
 class UnknownFetcher(Exception):
     pass
-def run_one_handle_kind(verbose: bool, kind: str, host: str, user: str, password: str):
+def run_one_handle_kind(verbose: bool, kind: str, host: str, user: str, password: str) -> None:
     x = None
     try:
         x = KINDS[kind]
@@ -28,7 +29,7 @@ def run_one_handle_kind(verbose: bool, kind: str, host: str, user: str, password
     if val:
         print(f"{host}\t{val}")
 
-def main_one():
+def main_one() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument("kind", help="APC interface kind (one of: old frmnc cs141)")
@@ -48,7 +49,7 @@ def main_one():
         eprint(F"{args.host}: ERROR: {e}")
     signal.alarm(0)
 
-def main_list():
+def main_list() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument("apclist", help="file containing list of 'kind host user password [timeout]'")
