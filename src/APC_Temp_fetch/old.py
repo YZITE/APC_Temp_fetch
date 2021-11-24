@@ -8,5 +8,8 @@ class Old(ApcKind):
 
     @staticmethod
     def extract(rlns) -> str:
-        *_, last = filter(lambda line: "Internal Temperature" in line, rlns)
-        return last
+        sel = ''
+        for line in rlns:
+            if "Internal Temperature" in line:
+                sel = next(rlns).split('>')[2].split('<')[0]
+        return sel
