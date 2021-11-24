@@ -1,5 +1,5 @@
 import requests
-from .base import ApcKind
+from .base import ApcKind, NullAuth
 
 class Cs141(ApcKind):
     def fetch(self, user: str, password: str):
@@ -7,6 +7,7 @@ class Cs141(ApcKind):
         upsst = None
 
         with requests.Session() as s:
+            s.auth = NullAuth()
             r = self.urlway(0, False, base_url + '/login', lambda xurl: s.post(xurl, data = {
                 'userName': user,
                 'password': password,

@@ -1,3 +1,4 @@
+import requests
 import sys
 
 class ApcKind:
@@ -32,3 +33,23 @@ class ApcKind:
     def extract(upsst) -> str:
         """extract the temperature from the return value of the `fetch` method"""
         raise NotImplementedError
+
+class AuthError(Exception):
+    def __init__(self, message='authentification failed'):
+        super().__init__(message)
+
+# source: https://github.com/psf/requests/issues/2773#issuecomment-174312831
+class NullAuth(requests.auth.AuthBase):
+    '''force requests to ignore the ``.netrc``
+
+    Some sites do not support regular authentication, but we still
+    want to store credentials in the ``.netrc`` file and submit them
+    as form elements. Without this, requests would otherwise use the
+    .netrc which leads, on some sites, to a 401 error.
+
+    Use with::
+
+        requests.get(url, auth=NullAuth())
+    '''
+
+    def __call__(self, r): return r

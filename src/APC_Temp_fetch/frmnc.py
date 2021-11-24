@@ -1,6 +1,6 @@
 import requests
 from urllib.parse import urljoin
-from .base import ApcKind
+from .base import ApcKind, AuthError, NullAuth
 
 class UpsParserStateMachine:
     def __init__(self) -> None:
@@ -43,6 +43,7 @@ class Frmnc(ApcKind):
     def fetch(self, user: str, password: str):
         base_url = "http://" + self._host
         s = requests.Session()
+        s.auth = NullAuth()
         r = self.urlway(0, True, base_url, lambda xurl: s.get(xurl, stream=True))
         forml = next(filter(lambda value: "name=\"frmLogin\"" in value, r.iter_lines(decode_unicode=True)))
         forml = next(filter(lambda value: "action=" in value, forml.split())).split('=', 2)[1].split('"', 3)[1]
@@ -51,6 +52,9 @@ class Frmnc(ApcKind):
             'login_username': user,
             'login_password': password,
         }))
+        if (r.status_code == 403) or (r.url == urljoin(base_url, forml)):
+            del r, s
+            raise AuthError('authentification failed')
         del forml
 
         try:
