@@ -65,7 +65,7 @@ class Frmnc(ApcKind):
             del statemach
             self.eprint(F'{self._host}: [result]:', repr(upsst))
         finally:
-            self.urlway(2, False, urljoin(r.url, "logout.htm"), s.head)
+            self.urlway(2, False, urljoin(r.url, "logout.htm"), s.get)
             del r, s
 
         return upsst
