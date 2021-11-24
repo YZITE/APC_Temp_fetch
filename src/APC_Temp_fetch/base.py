@@ -25,6 +25,6 @@ class ApcKind:
         raise NotImplementedError
 
     @staticmethod
-    def extract(upsst):
+    def extract(upsst) -> str:
         """extract the temperature from the return value of the `fetch` method"""
         raise NotImplementedError

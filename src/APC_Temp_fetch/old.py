@@ -7,4 +7,6 @@ class Old(ApcKind):
             lambda xurl: requests.get(xurl, auth = (user, password))).text
 
     @staticmethod
-    def extract(rtxt): return filter(lambda line: "Internal Temperature" in line, rtxt.splitlines())[-1]
+    def extract(rtxt) -> str:
+        *_, last = filter(lambda line: "Internal Temperature" in line, rtxt.splitlines())
+        return last

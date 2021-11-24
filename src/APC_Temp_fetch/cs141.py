@@ -26,4 +26,4 @@ class Cs141(ApcKind):
         return upsst
 
     @staticmethod
-    def extract(upsst): return upsst['TEMPDEG']
+    def extract(upsst) -> str: return upsst['TEMPDEG']

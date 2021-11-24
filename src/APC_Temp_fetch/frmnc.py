@@ -70,4 +70,4 @@ class Frmnc(ApcKind):
         return upsst
 
     @staticmethod
-    def extract(upsst): return upsst['Internal Temperature'].replace('&deg;C', '')
+    def extract(upsst) -> str: return upsst['Internal Temperature'].replace('&deg;C', '')
