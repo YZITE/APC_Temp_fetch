@@ -18,7 +18,7 @@ def eprint(*args, **kwargs):
 
 class UnknownFetcher(Exception):
     pass
-def run_one_handle_kind(verbose, kind, host, user, password):
+def run_one_handle_kind(verbose: bool, kind: str, host: str, user: str, password: str):
     x = None
     try:
         x = KINDS[kind]

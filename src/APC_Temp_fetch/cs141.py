@@ -2,7 +2,7 @@ import requests
 from .base import ApcKind
 
 class Cs141(ApcKind):
-    def fetch(self, user, password):
+    def fetch(self, user: str, password: str):
         upsst = None
 
         with requests.Session() as s:

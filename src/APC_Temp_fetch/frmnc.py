@@ -40,7 +40,7 @@ class UpsParserStateMachine:
                 self.upsst[self.key] += ' ' + tmp
 
 class Frmnc(ApcKind):
-    def fetch(self, user, password):
+    def fetch(self, user: str, password: str):
         base_url = "http://" + self.host
         r = o.urlway(0, base_url, lambda xurl: requests.get(xurl, stream=True))
         if r.encoding is None:
