@@ -2,30 +2,25 @@
 # NOTE: this program does not submit results to mqtt (separation of responsibilities)
 
 import argparse
-import signal
 import sys
 import time
 from . import KINDS
-
-# { source: https://code-maven.com/python-timeout
-class TimeOutException(Exception):
-    pass
-def alarm_handler(signum, frame):
-    raise TimeOutException('timeout reached')
-# }
 
 def eprint(*args, **kwargs) -> None:
     print(*args, file=sys.stderr, **kwargs)
 
 class UnknownFetcher(Exception):
     pass
-def run_one_handle_kind(verbose: bool, kind: str, host: str, user: str, password: str) -> None:
+def run_one(verbose: bool, kind: str, host: str, user: str, password: str, timeout: float) -> None:
     x = None
     try:
         x = KINDS[kind]
     except KeyError:
         raise UnknownFetcher('unknown fetcher: ' + kind)
-    val = x.extract(x(verbose, host).fetch(user, password))
+    rqa = {}
+    if timeout:
+        rqa['timeout'] = timeout
+    val = x.extract(x(verbose, host, rqa).fetch(user, password))
     if val:
         print(f"{host}\t{val}")
 
@@ -36,18 +31,14 @@ def main_one() -> None:
     parser.add_argument("host", help="connect to the host (APC) via HTTP")
     parser.add_argument("user", help="with the given user")
     parser.add_argument("password", help="with the given pass")
-    parser.add_argument("--timeout", help="set a timeout (in seconds) for the whole execution (per host)", type=int)
+    parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per host)", type=float)
     args = parser.parse_args()
     del parser
-    signal.signal(signal.SIGALRM, alarm_handler)
 
     try:
-        if args.timeout:
-            signal.alarm(args.timeout)
-        run_one_handle_kind(args.verbose, args.kind, args.host, args.user, args.password)
+        run_one(args.verbose, args.kind, args.host, args.user, args.password, args.timeoout)
     except Exception as e:
         eprint(F"{args.host}: ERROR: {e}")
-    signal.alarm(0)
 
 def main_list() -> None:
     parser = argparse.ArgumentParser()
@@ -55,7 +46,6 @@ def main_list() -> None:
     parser.add_argument("apclist", help="file containing list of 'kind host user password [timeout]'")
     args = parser.parse_args()
     del parser
-    signal.signal(signal.SIGALRM, alarm_handler)
     verbose = args.verbose
 
     with open(args.apclist, 'r') as apclist:
@@ -68,9 +58,7 @@ def main_list() -> None:
             else:
                 kind, host, user, password = parts[:4]
                 try:
-                    if len(parts) > 4:
-                        signal.alarm(int(parts[4]))
-                    run_one_handle_kind(verbose, kind, host, user, password)
+                    timeout = float(parts[4]) if len(parts) > 4 else None
+                    run_one(verbose, kind, host, user, password, timeout)
                 except Exception as e:
-                    eprint(F'{host}: ERROR: {e}')
-                signal.alarm(0)
+                    eprint(F'{host}: ERROR: {repr(e)}')

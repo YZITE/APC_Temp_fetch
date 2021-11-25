@@ -2,12 +2,13 @@ import requests
 import sys
 
 class ApcKind:
-    def __init__(self, verbose: bool, host: str, **kwargs):
+    def __init__(self, verbose: bool, host: str, rqargs, **kwargs):
         # forwards all unused arguments, to make this class usable as a mixin
         super().__init__(**kwargs) # type: ignore[call-arg]
 
         self._verbose = verbose
         self._host = host
+        self._rqargs = rqargs
 
     def eprint(self, *args, **kwargs) -> None:
         if self._verbose:
@@ -16,7 +17,7 @@ class ApcKind:
     def urlway(self, num: int, in_url: str, handler, **kwargs):
         self.eprint(F'{self._host}: [{num}]', in_url, end=' -> ')
         try:
-            r = handler(in_url, **kwargs)
+            r = handler(in_url, **kwargs, **self._rqargs)
             self.eprint(r.url)
             if 'stream' in kwargs and bool(kwargs['stream']) and r.encoding is None:
                 r.encoding = 'utf-8'
