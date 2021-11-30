@@ -2,16 +2,15 @@
 # NOTE: this program does not submit results to mqtt (separation of responsibilities)
 
 import argparse
+import logging
 import sys
 import time
 from . import KINDS
-
-def eprint(*args, **kwargs) -> None:
-    print(*args, file=sys.stderr, **kwargs)
+from .base import atf_logger
 
 class UnknownFetcher(Exception):
     pass
-def run_one(verbose: bool, kind: str, host: str, user: str, password: str, timeout: float) -> None:
+def run_one(kind: str, host: str, user: str, password: str, timeout) -> None:
     x = None
     try:
         x = KINDS[kind]
@@ -20,7 +19,7 @@ def run_one(verbose: bool, kind: str, host: str, user: str, password: str, timeo
     rqa = {}
     if timeout:
         rqa['timeout'] = timeout
-    val = x.extract(x(verbose, host, rqa).fetch(user, password))
+    val = x.extract(x(host, rqa).fetch(user, password))
     if val:
         print(f"{host}\t{val}")
 
@@ -34,11 +33,15 @@ def main_one() -> None:
     parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per host)", type=float)
     args = parser.parse_args()
     del parser
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+    atf_logger.addHandler(ch)
 
     try:
-        run_one(args.verbose, args.kind, args.host, args.user, args.password, args.timeoout)
+        run_one(args.kind, args.host, args.user, args.password, args.timeoout)
     except Exception as e:
-        eprint(F"{args.host}: ERROR: {e}")
+        atf_logger.exception(args.host)
 
 def main_list() -> None:
     parser = argparse.ArgumentParser()
@@ -46,7 +49,10 @@ def main_list() -> None:
     parser.add_argument("apclist", help="file containing list of 'kind host user password [timeout]'")
     args = parser.parse_args()
     del parser
-    verbose = args.verbose
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+    atf_logger.addHandler(ch)
 
     with open(args.apclist, 'r') as apclist:
         for line in apclist:
@@ -54,11 +60,11 @@ def main_list() -> None:
             if not parts or parts[0] == '#':
                 pass
             elif len(parts) < 4:
-                eprint("ERROR: got invalid apclist line:", line)
+                atf_logger.error(F'got invalid apclist line: {line}')
             else:
                 kind, host, user, password = parts[:4]
                 try:
                     timeout = float(parts[4]) if len(parts) > 4 else None
-                    run_one(verbose, kind, host, user, password, timeout)
+                    run_one(kind, host, user, password, timeout)
                 except Exception as e:
-                    eprint(F'{host}: ERROR: {repr(e)}')
+                    atf_logger.exception(host)

@@ -1,30 +1,29 @@
+import logging
 import requests
 import sys
 
+atf_logger = logging.getLogger('APC_Temp_fetch')
+
 class ApcKind:
-    def __init__(self, verbose: bool, host: str, rqargs, **kwargs):
+    def __init__(self, host: str, rqargs, **kwargs):
         # forwards all unused arguments, to make this class usable as a mixin
         super().__init__(**kwargs) # type: ignore[call-arg]
 
-        self._verbose = verbose
         self._host = host
         self._rqargs = rqargs
 
-    def eprint(self, *args, **kwargs) -> None:
-        if self._verbose:
-            print(*args, file=sys.stderr, **kwargs)
-
     def urlway(self, num: int, in_url: str, handler, **kwargs):
-        self.eprint(F'{self._host}: [{num}]', in_url, end=' -> ')
+        atf_logger.debug(F'{self._host}: [{num}] {in_url}')
         try:
             r = handler(in_url, **kwargs, **self._rqargs)
-            self.eprint(r.url)
+            atf_logger.debug(F'{self._host}: [{num}] -> {r.url}')
             if 'stream' in kwargs and bool(kwargs['stream']) and r.encoding is None:
                 r.encoding = 'utf-8'
             return r
         except Exception as e:
-            # we want to terminate the line cleanly
-            self.eprint('ERROR:', e)
+            atf_logger.error(F'{self._host}: [{num}] while fetching {r.url}: {repr(e)}')
+            # do not use atf_logger.exception because we re-raise
+            # the exception and don't want to clutter the output
             raise
 
     def fetch(self, user: str, password: str):

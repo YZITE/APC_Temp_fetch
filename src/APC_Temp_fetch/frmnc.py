@@ -1,6 +1,6 @@
 import requests
 from urllib.parse import urljoin
-from .base import ApcKind, AuthError, NullAuth
+from .base import atf_logger, ApcKind, AuthError, NullAuth
 
 class UpsParserStateMachine:
     def __init__(self) -> None:
@@ -54,7 +54,7 @@ class Frmnc(ApcKind):
         })
         if (r.status_code == 403) or (r.url == urljoin(base_url, forml)):
             del r, s
-            raise AuthError('authentification failed')
+            raise AuthError()
         del forml
 
         try:
@@ -63,7 +63,7 @@ class Frmnc(ApcKind):
                 (statemach.state)(line)
             upsst = statemach.upsst
             del statemach
-            self.eprint(F'{self._host}: [result]:', repr(upsst))
+            atf_logger.debug(F'{self._host}: [result] {repr(upsst)}')
         finally:
             self.urlway(2, urljoin(r.url, "logout.htm"), s.get)
             del r, s
