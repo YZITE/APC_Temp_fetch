@@ -6,7 +6,7 @@ import logging
 import sys
 import time
 from . import KINDS
-from .base import atf_logger
+from .base import ATF_LOGGER
 
 class UnknownFetcher(Exception):
     pass
@@ -36,12 +36,12 @@ def main_one() -> None:
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
     ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
-    atf_logger.addHandler(ch)
+    ATF_LOGGER.addHandler(ch)
 
     try:
         run_one(args.kind, args.host, args.user, args.password, args.timeoout)
     except Exception as e:
-        atf_logger.exception(args.host)
+        ATF_LOGGER.exception(args.host)
 
 def main_list() -> None:
     parser = argparse.ArgumentParser()
@@ -52,7 +52,7 @@ def main_list() -> None:
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
     ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
-    atf_logger.addHandler(ch)
+    ATF_LOGGER.addHandler(ch)
 
     with open(args.apclist, 'r') as apclist:
         for line in apclist:
@@ -60,11 +60,11 @@ def main_list() -> None:
             if not parts or parts[0] == '#':
                 pass
             elif len(parts) < 4:
-                atf_logger.error(F'got invalid apclist line: {line}')
+                ATF_LOGGER.error(F'got invalid apclist line: {line}')
             else:
                 kind, host, user, password = parts[:4]
                 try:
                     timeout = float(parts[4]) if len(parts) > 4 else None
                     run_one(kind, host, user, password, timeout)
                 except Exception as e:
-                    atf_logger.exception(host)
+                    ATF_LOGGER.exception(host)

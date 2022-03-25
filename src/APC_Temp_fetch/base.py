@@ -2,7 +2,7 @@ import logging
 import requests
 import sys
 
-atf_logger = logging.getLogger('APC_Temp_fetch')
+ATF_LOGGER = logging.getLogger('APC_Temp_fetch')
 
 class ApcKind:
     def __init__(self, host: str, rqargs, **kwargs):
@@ -13,16 +13,16 @@ class ApcKind:
         self._rqargs = rqargs
 
     def urlway(self, num: int, in_url: str, handler, **kwargs):
-        atf_logger.debug(F'{self._host}: [{num}] {in_url}')
+        ATF_LOGGER.debug(F'{self._host}: [{num}] {in_url}')
         try:
             r = handler(in_url, **kwargs, **self._rqargs)
-            atf_logger.debug(F'{self._host}: [{num}] -> {r.url}')
+            ATF_LOGGER.debug(F'{self._host}: [{num}] -> {r.url}')
             if 'stream' in kwargs and bool(kwargs['stream']) and r.encoding is None:
                 r.encoding = 'utf-8'
             return r
         except Exception as e:
-            atf_logger.error(F'{self._host}: [{num}] while fetching {r.url}: {repr(e)}')
-            # do not use atf_logger.exception because we re-raise
+            ATF_LOGGER.error(F'{self._host}: [{num}] while fetching {r.url}: {repr(e)}')
+            # do not use ATF_LOGGER.exception because we re-raise
             # the exception and don't want to clutter the output
             raise
 

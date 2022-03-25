@@ -1,5 +1,5 @@
 import requests
-from .base import atf_logger, ApcKind, NullAuth
+from .base import ATF_LOGGER, ApcKind, NullAuth
 
 class Cs141(ApcKind):
     def fetch(self, user: str, password: str):
@@ -23,7 +23,7 @@ class Cs141(ApcKind):
             upsst = r.json()['ups']['valtable']
             del r
 
-        atf_logger.debug(F'{self._host}: [result] {repr(upsst)}')
+        ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         return upsst
 
     @staticmethod

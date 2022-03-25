@@ -1,6 +1,6 @@
 import requests
 from urllib.parse import urljoin
-from .base import atf_logger, ApcKind, AuthError, NullAuth
+from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
 
 class UpsParserStateMachine:
     def __init__(self) -> None:
@@ -63,7 +63,7 @@ class Frmnc(ApcKind):
                 (statemach.state)(line)
             upsst = statemach.upsst
             del statemach
-            atf_logger.debug(F'{self._host}: [result] {repr(upsst)}')
+            ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         finally:
             self.urlway(2, urljoin(r.url, "logout.htm"), s.get)
             del r, s
