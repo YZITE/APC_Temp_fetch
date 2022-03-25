@@ -21,7 +21,8 @@ class ApcKind:
                 r.encoding = 'utf-8'
             return r
         except Exception as e:
-            ATF_LOGGER.error(F'{self._host}: [{num}] while fetching {r.url}: {repr(e)}')
+            # it does not make sense to try to use r.url here, it may be unavailable
+            ATF_LOGGER.error(F'{self._host}: [{num}] while fetching {in_url}: {repr(e)}')
             # do not use ATF_LOGGER.exception because we re-raise
             # the exception and don't want to clutter the output
             raise
