@@ -4,18 +4,18 @@ from urllib.parse import urljoin
 from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
 
 class UpsStatEntity:
-    def __init__(self):
+    def __init__(self) -> None:
         self.description = ''
         self.value = ''
         self.units = ''
 
 class UpsParserStateMachine(HTMLParser):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.stats = dict()
         self.__sel = None
 
-    def handle_starttag(self, tag, attrs):
+    def handle_starttag(self, tag: str, attrs) -> None:
         namattrs = [i[1] for i in attrs if i[0] == 'name']
         if (tag != 'span') or (len(namattrs) != 1):
             return
@@ -28,11 +28,11 @@ class UpsParserStateMachine(HTMLParser):
         self.__sel = self.stats[eid]
         self.__selty = ty
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         self.__sel = None
         self.__selty = ''
 
-    def handle_data(self, data):
+    def handle_data(self, data: str) -> None:
         if not self.__sel:
             return
         ty = self.__selty
