@@ -30,7 +30,7 @@ def main_one() -> None:
     parser.add_argument("host", help="connect to the host (APC) via HTTP")
     parser.add_argument("user", help="with the given user")
     parser.add_argument("password", help="with the given pass")
-    parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per host)", type=float)
+    parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per request)", type=float)
     args = parser.parse_args()
     del parser
     ch = logging.StreamHandler()

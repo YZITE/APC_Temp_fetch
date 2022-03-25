@@ -73,7 +73,7 @@ class GdenNt07(ApcKind):
                 statemach.close()
                 upsst = statemach.stats
             finally:
-                self.urlway(2, urljoin(r.url, 'logout.htm'), s.get)
+                self.urlway(3, urljoin(r.url, 'logout.htm'), s.get)
 
         upsst2 = {}
         for i in upsst.values():
