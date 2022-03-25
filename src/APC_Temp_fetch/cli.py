@@ -37,9 +37,10 @@ def main_one() -> None:
     ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
     ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
     ATF_LOGGER.addHandler(ch)
+    ATF_LOGGER.setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
     try:
-        run_one(args.kind, args.host, args.user, args.password, args.timeoout)
+        run_one(args.kind, args.host, args.user, args.password, args.timeout)
     except Exception as e:
         ATF_LOGGER.exception(args.host)
 
@@ -53,6 +54,7 @@ def main_list() -> None:
     ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
     ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
     ATF_LOGGER.addHandler(ch)
+    ATF_LOGGER.setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
     with open(args.apclist, 'r') as apclist:
         for line in apclist:

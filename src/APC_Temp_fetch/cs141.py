@@ -1,5 +1,6 @@
+import json
 import requests
-from .base import ATF_LOGGER, ApcKind, NullAuth
+from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
 
 class Cs141(ApcKind):
     def fetch(self, user: str, password: str):
@@ -8,20 +9,30 @@ class Cs141(ApcKind):
 
         with requests.Session() as s:
             s.auth = NullAuth()
-            r = self.urlway(0, base_url + '/login', s.post, data = {
+            headers = {
+                'content-type': 'application/json',
+            }
+            lgdat = {
                 'userName': user,
                 'password': password,
                 'anonymous': '',
                 'newPassword': '',
-            })
+            }
+            r = self.urlway(0, base_url + '/login', s.post, headers = headers, data = json.dumps(lgdat))
+            rj = r.json()
+            if 'message' in rj:
+                raise AuthError(rj['message'])
+            ATF_LOGGER.debug(F'{self._host}: [cookies] {repr(s.cookies.get_dict())}')
 
             try:
                 r = self.urlway(1, base_url + '/devices/ups/report', s.get)
             finally:
-                self.urlway(2, base_url + '/logout', s.post, data = { 'userName': user })
+                self.urlway(2, base_url + '/logout', s.post, headers = headers, data = json.dumps({ 'userName': user }))
 
-            upsst = r.json()['ups']['valtable']
-            del r
+            rj = r.json()
+            if ('message' in rj) and (rj['message'] == 'Unauthorized'):
+                raise AuthError(rj['message'])
+            upsst = rj['ups']['valtable']
 
         ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         return upsst

@@ -39,15 +39,13 @@ class UpsParserStateMachine:
             else:
                 self.upsst[self.key] += ' ' + tmp
 
-formNames = ["frmLogin", "HashForm1"]
-
 class Frmnc(ApcKind):
     def fetch(self, user: str, password: str):
         base_url = "http://" + self._host
         s = requests.Session()
         s.auth = NullAuth()
         r = self.urlway(0, base_url, s.get, stream=True)
-        forml = next(filter(lambda value: any((fname in value) for fname in formNames), r.iter_lines(decode_unicode=True)))
+        forml = next(filter(lambda value: "name=\"frmLogin\"" in value, r.iter_lines(decode_unicode=True)))
         forml = next(filter(lambda value: "action=" in value, forml.split())).split('=', 2)[1].split('"', 3)[1]
 
         r = self.urlway(1, urljoin(base_url, forml), s.post, stream=True, data = {
