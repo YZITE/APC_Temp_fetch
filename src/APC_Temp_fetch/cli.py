@@ -26,7 +26,7 @@ def run_one(kind: str, host: str, user: str, password: str, timeout) -> None:
 def main_one() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
-    parser.add_argument("kind", help="APC interface kind (one of: old frmnc cs141)")
+    parser.add_argument("kind", help=f"APC interface kind (one of: {' '.join(KINDS.keys())})")
     parser.add_argument("host", help="connect to the host (APC) via HTTP")
     parser.add_argument("user", help="with the given user")
     parser.add_argument("password", help="with the given pass")
