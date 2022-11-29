@@ -9,6 +9,7 @@ It supports the following interfaces:
 |--------|---------------|
 | `old`  | Simple interface using HTTP basic auth, information gets extracted from `upsstat.htm`, by finding the line mentioning `Internal Temperature` |
 | `frmnc` | Requires 2 HTTP requests, main characteristics are that the login form is named `frmLogin` in HTML, and the data is presented in a `<div>`-table, but parsable line-by-line |
+| `frmnc666` | Similar to `frmnc`; with 3 HTTP requests, but the status page is named `upstat.htm` (which makes the additional HTTP request necessary) |
 | `gden-nt07` | Similar to `frmnc`; with 3 HTTP requests, but the login form is named `HashForm1` instead, and the data representation is more complex, so a more full-blown HTML-parser is used; data structured via `<span>` items |
 | `cs141` | Simple JSON API (and the imo best interface of these); with 3 HTTP requests, characteristic is the the data is located at `/api/devices/ups/report` |
 
