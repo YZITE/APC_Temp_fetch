@@ -40,6 +40,13 @@ class UpsParserStateMachine:
                 self.upsst[self.key] += ' ' + tmp
 
 class Frmnc(ApcKind):
+    @staticmethod
+    def parse(rlns):
+        statemach = UpsParserStateMachine()
+        for line in rlns:
+            (statemach.state)(line)
+        return statemach.upsst
+
     def fetch(self, user: str, password: str):
         base_url = "http://" + self._host
         s = requests.Session()
@@ -58,11 +65,7 @@ class Frmnc(ApcKind):
         del forml
 
         try:
-            statemach = UpsParserStateMachine()
-            for line in r.iter_lines(decode_unicode=True):
-                (statemach.state)(line)
-            upsst = statemach.upsst
-            del statemach
+            upsst = self.parse(r.iter_lines(decode_unicode=True))
             ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         finally:
             self.urlway(2, urljoin(r.url, "logout.htm"), s.get)

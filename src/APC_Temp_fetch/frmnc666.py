@@ -1,7 +1,7 @@
 import requests
 from urllib.parse import urljoin
 from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
-from .frmnc import UpsParserStateMachine
+from .frmnc import Frmnc
 
 class Frmnc666(ApcKind):
     def fetch(self, user: str, password: str):
@@ -23,11 +23,7 @@ class Frmnc666(ApcKind):
 
         try:
             r = self.urlway(2, urljoin(r.url, "upstat.htm"), s.get)
-            statemach = UpsParserStateMachine()
-            for line in r.iter_lines(decode_unicode=True):
-                (statemach.state)(line)
-            upsst = statemach.upsst
-            del statemach
+            upsst = Frmnc.parse(r.iter_lines(decode_unicode=True))
         finally:
             self.urlway(3, urljoin(r.url, "logout.htm"), s.get)
             del r, s

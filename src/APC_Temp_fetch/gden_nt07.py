@@ -44,6 +44,14 @@ class UpsParserStateMachine(HTMLParser):
             self.__sel.units += data
 
 class GdenNt07(ApcKind):
+    @staticmethod
+    def parse(chunks):
+        statemach = UpsParserStateMachine()
+        for chunk in chunks:
+            statemach.feed(chunk)
+        statemach.close()
+        return statemach.stats
+
     def fetch(self, user: str, password: str):
         base_url = F'http://{self._host}'
         upsst = None
@@ -67,11 +75,7 @@ class GdenNt07(ApcKind):
 
             try:
                 r = self.urlway(2, urljoin(r.url, 'batts.htm'), s.get, stream=True)
-                statemach = UpsParserStateMachine()
-                for chunk in r.iter_lines(decode_unicode=True):
-                    statemach.feed(chunk)
-                statemach.close()
-                upsst = statemach.stats
+                upsst = self.parse(r.iter_lines(decode_unicode=True))
             finally:
                 self.urlway(3, urljoin(r.url, 'logout.htm'), s.get)
 

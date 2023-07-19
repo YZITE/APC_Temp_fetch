@@ -11,6 +11,7 @@ It supports the following interfaces:
 | `frmnc` | Requires 2 HTTP requests, main characteristics are that the login form is named `frmLogin` in HTML, and the data is presented in a `<div>`-table, but parsable line-by-line |
 | `frmnc666` | Similar to `frmnc`; with 3 HTTP requests, but the status page is named `upstat.htm` (which makes the additional HTTP request necessary) |
 | `gden-nt07` | Similar to `frmnc`; with 3 HTTP requests, but the login form is named `HashForm1` instead, and the data representation is more complex, so a more full-blown HTML-parser is used; data structured via `<span>` items |
+| `cs121` | Unauthenticated HTTP API (simply pass `- -` as `<user> <password>`), information gets extracted from `main.shtml`, by parsing `_dw` and `&nbsp;` from an HTML table, line-by-line |
 | `cs141` | Simple JSON API (and the imo best interface of these); with 3 HTTP requests, characteristic is the the data is located at `/api/devices/ups/report` |
 
 The description provides some guidance which `kind` an interface is.
