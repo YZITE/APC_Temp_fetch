@@ -23,6 +23,15 @@ def run_one(kind: str, host: str, user: str, password: str, timeout) -> None:
     if val:
         print(f"{host}\t{val}")
 
+def setup_logging(verbose: bool):
+    ch = logging.StreamHandler()
+    lvl = logging.DEBUG if verbose else logging.INFO
+    ch.setLevel(lvl)
+    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+    ATF_LOGGER.addHandler(ch)
+    ATF_LOGGER.setLevel(lvl)
+    return ch
+
 def main_one() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", help="increase output verbosity", action="store_true")
@@ -33,11 +42,7 @@ def main_one() -> None:
     parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per request)", type=float)
     args = parser.parse_args()
     del parser
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
-    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
-    ATF_LOGGER.addHandler(ch)
-    ATF_LOGGER.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+    ch = setup_logging(args.verbose)
 
     try:
         run_one(args.kind, args.host, args.user, args.password, args.timeout)
@@ -50,11 +55,7 @@ def main_list() -> None:
     parser.add_argument("apclist", help="file containing list of 'kind host user password [timeout]'")
     args = parser.parse_args()
     del parser
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG if args.verbose else logging.INFO)
-    ch.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
-    ATF_LOGGER.addHandler(ch)
-    ATF_LOGGER.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+    ch = setup_logging(args.verbose)
 
     with open(args.apclist, 'r') as apclist:
         for line in apclist:
