@@ -1,0 +1,40 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "APC-Temp-fetch"
+description = "APC/Schneider UPS current temperature fetchers"
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: Apache Software License",
+]
+requires-python = ">=3.9"
+dynamic = ["version"]
+dependencies = [
+  "requests >=2.0",
+]
+
+[[project.authors]]
+name = "Alain Zscheile"
+email = "fogti+atf@ytrizja.de"
+
+[project.urls]
+Home = "https://github.com/YZITE/APC_Temp_fetch"
+
+[project.scripts]
+APC_Tempf = "APC_Temp_fetch.cli:main_one"
+APC_Tempstfe = "APC_Temp_fetch.cli:main_list"
+
+[tool.flit.sdist]
+exclude = [
+  ".gitignore",
+  "build",
+  "venv",
+  ".mypy_cache",
+]
+include = [
+  "src/APC_Temp_fetch/py.typed",
+]
