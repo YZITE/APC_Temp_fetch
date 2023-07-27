@@ -1,6 +1,7 @@
 /build/
 /dist/
 /venv/
+/src/*.dist-info
 *.egg-info
 .mypy_cache
 *.pyc

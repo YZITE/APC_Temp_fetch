@@ -1,0 +1,5 @@
+python3-apc-temp-fetch (0:0.0.5) stable; urgency=medium
+
+  * Release 0:0.0.5 (switch build system to flit)
+
+ -- Alain Zscheile <fogti+devel@ytrizja.de>  Tue, 27 Jul 2023 11:48:30 +0000

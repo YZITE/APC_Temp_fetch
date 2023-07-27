@@ -32,6 +32,7 @@ APC_Tempstfe = "APC_Temp_fetch.cli:main_list"
 exclude = [
   ".gitignore",
   "build",
+  "debian",
   "venv",
   ".mypy_cache",
 ]

@@ -1,0 +1,14 @@
+Source: python3-apc-temp-fetch
+Section: python
+Priority: optional
+Maintainer: Alain Zscheile <fogti+devel@ytrizja.de>
+Build-Depends: debhelper, dh-python, flit, python3, pybuild-plugin-pyproject
+Standards-Version: 3.9.6
+X-Python3-Version: >= 3.9
+
+Package: python3-apc-temp-fetch
+Architecture: all
+Depends: python3-requests, ${python3:Depends}
+Homepage: https://github.com/YZITE/APC_Temp_fetch
+Description: APC/Schneider UPS current temperature fetchers
+  This package installs the library for Python 3 and associated tools.

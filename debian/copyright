@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://github.com/YZITE/APC_Temp_fetch
+Upstream-Name: APC-Temp-fetch
+Upstream-Contact: Alain Zscheile <fogti+devel@ytrizja.de>
+
+Files: *
+Copyright: 2023 Alain Zscheile
+License: Apache-2.0
