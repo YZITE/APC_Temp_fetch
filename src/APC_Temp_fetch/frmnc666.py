@@ -24,11 +24,11 @@ class Frmnc666(ApcKind):
         try:
             r = self.urlway(2, urljoin(r.url, "upstat.htm"), s.get)
             upsst = Frmnc.parse(r.iter_lines(decode_unicode=True))
+            ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         finally:
             self.urlway(3, urljoin(r.url, "logout.htm"), s.get)
             del r, s
 
-        ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         return upsst
 
     @staticmethod
