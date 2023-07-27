@@ -1,3 +1,4 @@
+/.pybuild
 /build/
 /dist/
 /venv/
@@ -5,3 +6,9 @@
 *.egg-info
 .mypy_cache
 *.pyc
+
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/files
+/debian/python3-apc-temp-fetch.*
+/debian/python3-apc-temp-fetch/
