@@ -1,3 +1,9 @@
+python3-apc-temp-fetch (0:0.0.9) stable; urgency=medium
+
+  * Release 0:0.0.9 (properly support cs121 v3 and v5)
+
+ -- Alain Zscheile <fogti+devel@ytrizja.de>  Tue, 23 Aug 2023 21:58:57 +0200
+
 python3-apc-temp-fetch (0:0.0.5) stable; urgency=medium
 
   * Release 0:0.0.5 (switch build system to flit)
