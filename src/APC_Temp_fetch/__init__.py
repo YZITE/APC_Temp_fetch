@@ -5,7 +5,7 @@ from .cs121 import Cs121
 from .cs141 import Cs141
 from .gden_nt07 import GdenNt07
 
-__version__ = '0.0.9'
+__version__ = '0.0.10'
 
 KINDS = {
     'old': Old,

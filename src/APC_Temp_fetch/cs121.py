@@ -4,12 +4,6 @@ from collections.abc import Iterable
 from typing import Dict, Tuple
 from .base import ATF_LOGGER, ApcKind
 
-
-from html.parser import HTMLParser
-import requests
-from collections.abc import Iterable
-from typing import Dict, List
-
 class UpsStatEntity:
     def __init__(self, ident) -> None:
        self.ident = ident
