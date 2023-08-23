@@ -21,7 +21,14 @@ def run_one(kind: str, host: str, user: str, password: str, timeout: Optional[fl
     rqa = copy.deepcopy(rqadfl)
     if timeout:
         rqa['timeout'] = timeout
-    val = x.extract(x(host, rqa).fetch(user, password))
+    fval = x(host, rqa).fetch(user, password)
+    val = None
+    try:
+        val = x.extract(fval)
+    except KeyError:
+        # suppress verbose traceback
+        ATF_LOGGER.error(F"{host}: unable to extract temperature data")
+        return
     if val:
         print(f"{host}\t{val}")
 
