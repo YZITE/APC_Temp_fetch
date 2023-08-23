@@ -80,4 +80,6 @@ class Cs121(ApcKind):
 
     @staticmethod
     def extract(upsst: Dict[str, Tuple[int, str]]) -> str:
-        return upsst["UPS Temperature"][0][0]
+        for i in ['UPS Temperature', 'Battery Temperature']:
+            j = upsst.get(i)
+            if j: return j[1]
