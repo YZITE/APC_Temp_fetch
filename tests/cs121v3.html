@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="refresh" content="10; URL=/main.shtml">
+<meta http-equiv="expires" content="0">
+<meta name="robots" content="noindex">
+<meta name="generator" content="CS121 v 3.05.4">
+<link rel="stylesheet" type="text/css" href="/cs121.css">
+<title>cs121 ups status</title>
+</head>
+
+<body class="main">
+<script language="JavaScript" src="/cs121.js" type="text/javascript"></script>
+
+<h1>UPS Status</h1>
+
+ 
+<div class="tt" id="upsstat_01">
+<b>Status</b><br>Indicates the general status of the UPS: OK, on battery, bypass, and more.
+</div>
+<div class="tt" id="upsstat_02">
+<b>Input Voltage</b><br>Current level of voltage input.
+</div>
+<div class="tt" id="upsstat_03">
+<b>Input Frequency</b><br>Current frequency of input.
+</div>
+<div class="tt" id="upsstat_04">
+<b>Output Voltage</b><br>Current level of UPS output voltage.
+</div>
+<div class="tt" id="upsstat_05">
+<b>Output Frequency</b><br>Current frequency of output.
+</div>
+<div class="tt" id="upsstat_06">
+<b>Load</b><br>Current load in percent in terms of battery power.
+</div>
+<div class="tt" id="upsstat_07">
+<b>Seconds on Battery</b><br>System counter in seconds during the &quot;on battery&quot; status.
+</div>
+<div class="tt" id="upsstat_08">
+<b>Battery Voltage</b><br>Current UPS battery voltage.
+</div>
+<div class="tt" id="upsstat_09">
+<b>Battery Capacity</b><br>Charge level of UPS battery in percent.
+</div>
+<div class="tt" id="upsstat_10">
+<b>Autonomy Time</b><br>Calculated estimate of time remaining under the current load after which battery capacity will be exhausted.
+</div>
+<div class="tt" id="upsstat_11">
+<b>Battery Temperature</b><br>Current temperature of UPS battery.
+</div>
+<div class="tt" id="loadbar">
+This is both a graphical and numerical display of the current UPS load in percent of total available capacity.
+</div>
+<div class="tt" id="bcbar">
+This is both a graphical and numerical display of the current UPS battery level in percent of total charging capacity.
+</div>
+
+
+<table class="main" cellspacing=0 cellpadding=0 border=0 width="100%">
+<tr>
+<th class="main" align="left" width="50%">UPS Power Status</th>
+<th class="main" align="right"><a href="help/ups.html" target="_blank"><img src="/img/help.gif" border=0 alt="Help about 'UPS Power Status'"></a>&nbsp;</th>
+</tr>
+<tr>
+<td valign="top">
+ <table cellspacing=0 cellpadding=0 border=0 width="100%">
+ <tr onMouseOver="TTshow('upsstat_01')" onMouseOut="TThide()"><td class="maina">Status</td><td class="mainb" width="100%" colspan=3>UPS STATUS OK</td></tr>
+ <tr><td class="maina">UPS&nbsp;Model</td><td class="mainb" width="100%" colspan=3>XANTO ---censored---</td></tr>
+ <tr onMouseOver="TTshow('upsstat_02')" onMouseOut="TThide()"><td class="maina">Input&nbsp;Voltage</td><td class="mainb" width="100%" colspan=3>237&nbsp;V</td></tr>
+ <tr onMouseOver="TTshow('upsstat_03')" onMouseOut="TThide()"><td class="maina">Input&nbsp;Frequency</td><td class="mainb" width="100%" colspan=3>50.0&nbsp;Hz</td></tr>
+ <tr onMouseOver="TTshow('upsstat_04')" onMouseOut="TThide()"><td class="maina">Output&nbsp;Voltage</td><td class="mainb" width="100%" colspan=3>230&nbsp;V</td></tr>
+ <tr onMouseOver="TTshow('upsstat_05')" onMouseOut="TThide()"><td class="maina">Output&nbsp;Frequency</td><td class="mainb" width="100%" colspan=3>N/A</td></tr>
+ <tr onMouseOver="TTshow('upsstat_06')" onMouseOut="TThide()"><td class="maina">Load</td><td class="mainb" width="100%" colspan=3>13&nbsp;%</td></tr>
+ </table>
+</td>
+<td valign="top">
+ <table cellspacing=0 cellpadding=0 border=0 width="100%">
+ <tr><td class="mainb" colspan=2>&nbsp;</td></tr>
+ <tr><td class="maina">Location</td><td class="mainb" width="100%" colspan=3>---censored---</td></tr>
+ <tr onMouseOver="TTshow('upsstat_07')" onMouseOut="TThide()"><td class="maina">Seconds&nbsp;on&nbsp;Battery</td><td class="mainb" width="100%" colspan=3>0</td></tr>
+ <tr onMouseOver="TTshow('upsstat_08')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Voltage</td><td class="mainb" width="100%" colspan=3>108.96&nbsp;V</td></tr>
+ <tr onMouseOver="TTshow('upsstat_09')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Capacity</td><td class="mainb" width="100%" colspan=3>100.0&nbsp;%</td></tr>
+ <tr onMouseOver="TTshow('upsstat_10')" onMouseOut="TThide()"><td class="maina">Autonomy&nbsp;Time</td><td class="mainb" width="100%" colspan=3>425.59 minutes</td></tr>
+ <tr onMouseOver="TTshow('upsstat_11')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Temperature</td><td class="mainb" width="100%" colspan=3>25.0&nbsp;</td></tr>
+ </table>
+</td></tr>
+</table><br>
+
+
+<br>
+<table class="main" cellspacing=0 cellpadding=0 border=0 width="100%" onMouseOver="TTshow('loadbar')" onMouseOut="TThide()">
+<tr>
+<th class="main" align="left" width="50%">Load in percent</th>
+<th class="main" align="right"><a href="help/load.html" target="_blank"><img src="/img/help.gif" border=0 alt="Help about 'Load'"></a>&nbsp;</th>
+</tr>
+<tr><td colspan=2>
+<table class="bar" cellspacing=2 cellpadding=0 border=0 width="100%">
+<tr><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="gbar2">&nbsp;</td><td width="5%" class="ybar2">&nbsp;</td><td width="5%" class="ybar2">&nbsp;</td><td width="5%" class="ybar2">&nbsp;</td><td width="5%" class="rbar2">&nbsp;</td><td class="bar" align="right">13.0&nbsp;%</td></tr>
+</table>
+
+</td></tr>
+</table>
+
+<br><br>
+<table class="main" cellspacing=0 cellpadding=0 border=0 width="100%" onMouseOver="TTshow('bcbar')" onMouseOut="TThide()">
+<tr>
+<th class="main" align="left" width="50%">Battery Capacity</th>
+<th class="main" align="right"><a href="help/battcap.html" target="_blank"><img src="/img/help.gif" border=0 alt="Help about 'Battery Capacity'"></a>&nbsp;</th>
+</tr>
+<tr><td colspan=2>
+<table class="bar" cellspacing=2 cellpadding=0 border=0 width="100%"><tr>
+<td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td width="5%" class="gbar">&nbsp;</td><td class="bar" align="right">100.0&nbsp;%</td></tr>
+</table>
+
+</td></tr>
+</table>
+
+
+</body>
+</html>

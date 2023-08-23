@@ -17,6 +17,11 @@ dependencies = [
   "requests >=2.0",
 ]
 
+[project.optional-dependencies]
+test = [
+  "pytest >=7.1.2",
+]
+
 [[project.authors]]
 name = "Alain Zscheile"
 email = "fogti+atf@ytrizja.de"

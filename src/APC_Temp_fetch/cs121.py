@@ -1,23 +1,75 @@
+from html.parser import HTMLParser
+import requests
+from collections.abc import Iterable
+from typing import Dict, Tuple
+from .base import ATF_LOGGER, ApcKind
+
+
+from html.parser import HTMLParser
 import requests
 from collections.abc import Iterable
 from typing import Dict, List
-from .base import ATF_LOGGER, ApcKind
 
-def mangle_subpart(sp: str) -> str:
-    # e.g. parts look like: ['"><b>L1:', '</b>10', '%</td><td class="']
-    return sp.removeprefix(' width="100%" colspan=3').removeprefix('>').replace('<b>', '').replace('</b>', '').removesuffix('</tr>').removesuffix('<td class=').removesuffix('</td>')
+class UpsStatEntity:
+    def __init__(self, ident) -> None:
+       self.ident = ident
+       self.description = ''
+       self.value = ''
 
-def mangle_line(l: str) -> tuple[str, List[List[str]]]:
-    l = l.split('_dw')[1]
-    lkey = l.split('("')[1].split('")')[0]
-    lvalue = map(lambda p: map(mangle_subpart, p.split('&nbsp;')), l.split('"mainb"')[1:])
-    return (lkey, [[j for j in i] for i in lvalue])
+# e.g. """ <tr onMouseOver="TTshow('upsstat_11')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Temperature</td><td class="mainb" width="100%" colspan=3>30.0&nbsp;</td></tr>"""
+
+class UpsParserStateMachine(HTMLParser):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.stats = dict()
+        self.__sel = None
+        self.__selty = None
+
+    def handle_starttag(self, tag: str, attrs) -> None:
+        attrs = {i[0]: i[1] for i in attrs}
+        if tag == 'tr':
+            if ('onmouseover' in attrs) and (attrs.get('onmouseout') == 'TThide()'):
+                self.__sel = UpsStatEntity(attrs['onmouseover'].replace("TTshow('upsstat_", '').replace("')", ''))
+                self.__selty = None
+        elif self.__sel and tag == 'td':
+            self.__selty = attrs.get('class')
+
+    @staticmethod
+    def mangle_value(x: str) -> str:
+        return x.strip().replace('\xa0', ' ').removeprefix('_dw("').removesuffix('")')
+
+    def handle_endtag(self, tag: str) -> None:
+        if not self.__sel:
+            return
+
+        if tag == 'td':
+            self.__selty = None
+        elif tag == 'tr' and self.__sel.description:
+            self.stats[self.mangle_value(self.__sel.description)] = (self.__sel.ident, self.mangle_value(self.__sel.value))
+            self.__selty = None
+            self.__sel = None
+
+    def handle_entityref(self, name: str) -> None:
+        if name == '&nbsp;':
+            self.handle_data(' ')
+
+    def handle_data(self, data: str) -> None:
+        if (not self.__sel) or (not self.__selty):
+            return
+
+        if self.__selty == 'maina':
+            self.__sel.description += data
+        elif self.__selty == 'mainb':
+            self.__sel.value += data
 
 class Cs121(ApcKind):
     @staticmethod
-    def parse(rlns: Iterable[str]) -> Dict[str, List[List[str]]]:
-        tmp = map(mangle_line, filter(lambda l: ('_dw' in l) and ('&nbsp;' in l), rlns))
-        return {key: value for key, value in tmp}
+    def parse(rlns: Iterable[str]) -> Dict[str, Tuple[int, str]]:
+        statemach = UpsParserStateMachine()
+        for line in rlns:
+            statemach.feed(line)
+        statemach.close()
+        return statemach.stats
 
     def fetch(self, user: str, password: str):
         # we ignore user and password
@@ -27,5 +79,5 @@ class Cs121(ApcKind):
         return upsst
 
     @staticmethod
-    def extract(upsst: Dict[str, List[List[str]]]) -> str:
+    def extract(upsst: Dict[str, Tuple[int, str]]) -> str:
         return upsst["UPS Temperature"][0][0]
