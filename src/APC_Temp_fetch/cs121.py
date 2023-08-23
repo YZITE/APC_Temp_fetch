@@ -28,4 +28,4 @@ class Cs121(ApcKind):
 
     @staticmethod
     def extract(upsst: Dict[str, List[List[str]]]) -> str:
-        return upsst["UPS Temperature"][0][1]
+        return upsst["UPS Temperature"][0][0]
