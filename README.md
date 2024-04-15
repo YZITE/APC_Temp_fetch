@@ -41,6 +41,11 @@ Results are formatted as `<host>\t<temperature>` (`<>` brackets aren't part of t
 
 ## proxy support
 
+Warning: It is strongly discouraged to ever use this. At most, use it for testing.
+But as we know, testing too often just implicitly ends up in production sometimes,
+so also avoid this when testing. This is an extremely hacky workaround and goes
+against security and maintainability best practises usually, afaik. Do not use this.
+
 If required, `--proxy <proxy_url>` can be added to the entry point command line
 to contact all API endpoints through the specified proxy.
 Note that this might require `pip3 install 'requests[socks]'` or

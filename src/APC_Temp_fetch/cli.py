@@ -49,6 +49,7 @@ def parse_rqadfl(args: Any) -> Dict[str, Any]:
     rqadfl = {}
     if args.proxy:
          rqadfl["proxies"] = dict(http=args.proxy, https=args.proxy)
+         ATF_LOGGER.warning("you're using a proxy currently, don't do this in production")
     return rqadfl
 
 def main_one() -> None:
