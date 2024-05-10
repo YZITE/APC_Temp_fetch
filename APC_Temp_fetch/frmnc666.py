@@ -12,7 +12,7 @@ class Frmnc666(ApcKind):
         forml = next(filter(lambda value: "name=\"frmLogin\"" in value, r.iter_lines(decode_unicode=True)))
         forml = next(filter(lambda value: "action=" in value, forml.split())).split('=', 2)[1].split('"', 3)[1]
 
-        r = self.urlway(1, urljoin(base_url, forml), s.post, stream=True, data = {
+        r = self.urlway(1, urljoin(base_url, forml), s.post, stream=True, data={
             'login_username': user,
             'login_password': password,
         })

@@ -1,6 +1,5 @@
 import logging
 import requests
-import sys
 from typing import Optional
 
 ATF_LOGGER = logging.getLogger('APC_Temp_fetch')
@@ -8,7 +7,7 @@ ATF_LOGGER = logging.getLogger('APC_Temp_fetch')
 class ApcKind:
     def __init__(self, host: str, rqargs, **kwargs):
         # forwards all unused arguments, to make this class usable as a mixin
-        super().__init__(**kwargs) # type: ignore[call-arg]
+        super().__init__(**kwargs)  # type: ignore[call-arg]
 
         self._host = host
         self._rqargs = rqargs

@@ -4,8 +4,6 @@
 import argparse
 import copy
 import logging
-import sys
-import time
 from typing import Any, Dict, Optional
 from . import KINDS
 from .base import ATF_LOGGER
@@ -48,8 +46,8 @@ def setup_logging(verbose: bool) -> logging.StreamHandler:
 def parse_rqadfl(args: Any) -> Dict[str, Any]:
     rqadfl = {}
     if args.proxy:
-         rqadfl["proxies"] = dict(http=args.proxy, https=args.proxy)
-         ATF_LOGGER.warning("you're using a proxy currently, don't do this in production")
+        rqadfl["proxies"] = dict(http=args.proxy, https=args.proxy)
+        ATF_LOGGER.warning("you're using a proxy currently, don't do this in production")
     return rqadfl
 
 def main_one() -> None:
@@ -62,12 +60,12 @@ def main_one() -> None:
     parser.add_argument("--timeout", help="set a timeout (in seconds) for each request execution (per request)", type=float)
     args = parser.parse_args()
     del parser
-    ch = setup_logging(args.verbose)
+    setup_logging(args.verbose)
     rqadfl = parse_rqadfl(args)
 
     try:
         run_one(args.kind, args.host, args.user, args.password, args.timeout, rqadfl)
-    except Exception as e:
+    except Exception:
         ATF_LOGGER.exception(args.host)
 
 def main_list() -> None:
@@ -76,7 +74,7 @@ def main_list() -> None:
     parser.add_argument("apclist", help="file containing list of 'kind host user password [timeout]'")
     args = parser.parse_args()
     del parser
-    ch = setup_logging(args.verbose)
+    setup_logging(args.verbose)
     rqadfl = parse_rqadfl(args)
 
     with open(args.apclist, 'r') as apclist:
@@ -91,5 +89,5 @@ def main_list() -> None:
                 try:
                     timeout = float(parts[4]) if len(parts) > 4 else None
                     run_one(kind, host, user, password, timeout, rqadfl)
-                except Exception as e:
+                except Exception:
                     ATF_LOGGER.exception(host)

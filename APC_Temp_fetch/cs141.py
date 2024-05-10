@@ -18,7 +18,7 @@ class Cs141(ApcKind):
                 'anonymous': '',
                 'newPassword': '',
             }
-            r = self.urlway(0, base_url + '/login', s.post, headers = headers, data = json.dumps(lgdat))
+            r = self.urlway(0, base_url + '/login', s.post, headers=headers, data=json.dumps(lgdat))
             rj = r.json()
             if 'message' in rj:
                 raise AuthError(rj['message'])
@@ -27,7 +27,7 @@ class Cs141(ApcKind):
             try:
                 r = self.urlway(1, base_url + '/devices/ups/report', s.get)
             finally:
-                self.urlway(2, base_url + '/logout', s.post, headers = headers, data = json.dumps({ 'userName': user }))
+                self.urlway(2, base_url + '/logout', s.post, headers=headers, data=json.dumps({'userName': user}))
 
             rj = r.json()
             if ('message' in rj) and (rj['message'] == 'Unauthorized'):

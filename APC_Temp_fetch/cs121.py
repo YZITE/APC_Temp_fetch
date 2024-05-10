@@ -6,11 +6,12 @@ from .base import ATF_LOGGER, ApcKind
 
 class UpsStatEntity:
     def __init__(self, ident: str) -> None:
-       self.ident = ident
-       self.description = ''
-       self.value = ''
+        self.ident = ident
+        self.description = ''
+        self.value = ''
 
-# e.g. """ <tr onMouseOver="TTshow('upsstat_11')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Temperature</td><td class="mainb" width="100%" colspan=3>30.0&nbsp;</td></tr>"""
+# e.g. """ <tr onMouseOver="TTshow('upsstat_11')" onMouseOut="TThide()"><td class="maina">Battery&nbsp;Temperature</td>
+#          <td class="mainb" width="100%" colspan=3>30.0&nbsp;</td></tr>""" (on one line)
 
 class UpsParserStateMachine(HTMLParser):
     def __init__(self, **kwargs) -> None:
@@ -67,7 +68,7 @@ class Cs121(ApcKind):
 
     def fetch(self, user: str, password: str):
         # we ignore user and password
-        rlns = self.urlway(0, F'http://{self._host}/main.shtml', requests.get, stream = True).iter_lines(decode_unicode=True)
+        rlns = self.urlway(0, F'http://{self._host}/main.shtml', requests.get, stream=True).iter_lines(decode_unicode=True)
         upsst = self.parse(rlns)
         ATF_LOGGER.debug(F'{self._host}: [result] {repr(upsst)}')
         return upsst
@@ -76,5 +77,6 @@ class Cs121(ApcKind):
     def extract(upsst: Dict[str, Tuple[str, str]]) -> Optional[str]:
         for i in ['UPS Temperature', 'Battery Temperature']:
             j = upsst.get(i)
-            if j: return j[1]
+            if j:
+                return j[1]
         return None
