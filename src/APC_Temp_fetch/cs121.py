@@ -1,11 +1,11 @@
 from html.parser import HTMLParser
 import requests
 from collections.abc import Iterable
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 from .base import ATF_LOGGER, ApcKind
 
 class UpsStatEntity:
-    def __init__(self, ident) -> None:
+    def __init__(self, ident: str) -> None:
        self.ident = ident
        self.description = ''
        self.value = ''
@@ -15,8 +15,8 @@ class UpsStatEntity:
 class UpsParserStateMachine(HTMLParser):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.stats = dict()
-        self.__sel = None
+        self.stats: Dict[str, Tuple[str, str]] = dict()
+        self.__sel: Optional[UpsStatEntity] = None
         self.__selty = None
 
     def handle_starttag(self, tag: str, attrs) -> None:
@@ -58,7 +58,7 @@ class UpsParserStateMachine(HTMLParser):
 
 class Cs121(ApcKind):
     @staticmethod
-    def parse(rlns: Iterable[str]) -> Dict[str, Tuple[int, str]]:
+    def parse(rlns: Iterable[str]) -> Dict[str, Tuple[str, str]]:
         statemach = UpsParserStateMachine()
         for line in rlns:
             statemach.feed(line)
@@ -73,7 +73,8 @@ class Cs121(ApcKind):
         return upsst
 
     @staticmethod
-    def extract(upsst: Dict[str, Tuple[int, str]]) -> str:
+    def extract(upsst: Dict[str, Tuple[str, str]]) -> Optional[str]:
         for i in ['UPS Temperature', 'Battery Temperature']:
             j = upsst.get(i)
             if j: return j[1]
+        return None

@@ -1,10 +1,11 @@
 import requests
+from typing import Dict
 from urllib.parse import urljoin
 from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
 
 class UpsParserStateMachine:
     def __init__(self) -> None:
-        self.upsst = {}
+        self.upsst: Dict[str, str] = {}
         self.state = self.wait_for_upss
         self.key = ''
 

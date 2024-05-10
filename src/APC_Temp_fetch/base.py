@@ -1,6 +1,7 @@
 import logging
 import requests
 import sys
+from typing import Optional
 
 ATF_LOGGER = logging.getLogger('APC_Temp_fetch')
 
@@ -31,7 +32,7 @@ class ApcKind:
         raise NotImplementedError
 
     @staticmethod
-    def extract(upsst) -> str:
+    def extract(upsst) -> Optional[str]:
         """extract the temperature from the return value of the `fetch` method"""
         raise NotImplementedError
 

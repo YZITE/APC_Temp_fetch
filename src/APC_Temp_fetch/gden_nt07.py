@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 import requests
+from typing import Dict, Optional
 from urllib.parse import urljoin
 from .base import ATF_LOGGER, ApcKind, AuthError, NullAuth
 
@@ -12,8 +13,8 @@ class UpsStatEntity:
 class UpsParserStateMachine(HTMLParser):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.stats = dict()
-        self.__sel = None
+        self.stats: Dict[str, UpsStatEntity] = dict()
+        self.__sel: Optional[UpsStatEntity] = None
 
     def handle_starttag(self, tag: str, attrs) -> None:
         namattrs = [i[1] for i in attrs if i[0] == 'name']
