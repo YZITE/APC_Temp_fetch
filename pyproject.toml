@@ -36,10 +36,11 @@ APC_Tempstfe = "APC_Temp_fetch.cli:main_list"
 [tool.flit.sdist]
 exclude = [
   ".gitignore",
+  ".github",
+  ".mypy_cache",
   "build",
   "debian",
   "venv",
-  ".mypy_cache",
 ]
 include = [
   "src/APC_Temp_fetch/py.typed",
